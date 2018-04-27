@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-    
+
     private void initUi() {
         mPlay = findViewById(R.id.play);
         mPause = findViewById(R.id.pause);
