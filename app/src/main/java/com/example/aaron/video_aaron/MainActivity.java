@@ -1,6 +1,8 @@
 package com.example.aaron.video_aaron;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -9,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initUi();
         mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(MainActivity.this);      //Surface lifecycle need to be handle
+//        mSurfaceHolder.addCallback(MainActivity.this);      //Surface lifecycle need to be handle
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -127,12 +131,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.fullscreen:
             {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 mFullscreen.setVisibility(View.INVISIBLE);
                 mFullscreenExit.setVisibility(View.VISIBLE);
                 break;
             }
             case R.id.fullscreen_exit:
             {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 mFullscreenExit.setVisibility(View.INVISIBLE);
                 mFullscreen.setVisibility(View.VISIBLE);
                 break;
