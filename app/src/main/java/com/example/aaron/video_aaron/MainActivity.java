@@ -1,6 +1,8 @@
 package com.example.aaron.video_aaron;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +13,9 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,SurfaceHolder.Callback{
 
     private String mVideoUrl =
             "https://s3-ap-northeast-1.amazonaws.com/mid-exam/Video/protraitVideo.mp4";
@@ -28,9 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initUi();
-
-        mSurfaceView = new SurfaceView(this);
         mSurfaceHolder = mSurfaceView.getHolder();
+        mSurfaceHolder.addCallback(MainActivity.this);      //Surface lifecycle need to be handle
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -48,20 +51,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mMediaPlayer.seekTo(progress);
             }
         });
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setDisplay(mSurfaceHolder);
+        try {
+            mMediaPlayer.setDataSource(mVideoUrl);
+            mMediaPlayer.prepare();
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
 
     }
 
     @Override
     public void onClick(View v) {
-        mMediaPlayer = new MediaPlayer();
+
         switch (v.getId()){
             case R.id.play:{
+                mSurfaceHolder = mSurfaceView.getHolder();
+                mSurfaceHolder.addCallback(MainActivity.this);
+                if(mMediaPlayer==null){
+                    mMediaPlayer=new MediaPlayer();
+                    mMediaPlayer.setAudioSessionId(AudioManager.STREAM_MUSIC);
+                    new MyThread().start();
+                    mMediaPlayer.start();
+                    int duration=mMediaPlayer.getDuration();
+                    mSeekBar.setMax(duration);
+                }else{
+                    mMediaPlayer.start();
+                }
                 mPause.setVisibility(View.VISIBLE);
                 mPlay.setVisibility(View.INVISIBLE);
                 break;
             }
             case R.id.pause:
             {
+                if(mMediaPlayer.isPlaying()){
+                    mMediaPlayer.pause();
+                }
                 mPause.setVisibility(View.INVISIBLE);
                 mPlay.setVisibility(View.VISIBLE);
                 break;
@@ -101,6 +142,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
+
+    class MyThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            while(mSeekBar.getProgress()<=mSeekBar.getMax()){
+                int position=mMediaPlayer.getCurrentPosition();
+                mSeekBar.setProgress(position);
+            }
+        }
+    }
+    
     private void initUi() {
         mPlay = findViewById(R.id.play);
         mPause = findViewById(R.id.pause);
@@ -125,5 +178,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFullscreen.setOnClickListener(this);
         mFullscreenExit.setOnClickListener(this);
         mPlayer.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseMediaPlayer();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseMediaPlayer();
+    }
+
+    private void releaseMediaPlayer() {
+        if(mMediaPlayer != null){
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 }
