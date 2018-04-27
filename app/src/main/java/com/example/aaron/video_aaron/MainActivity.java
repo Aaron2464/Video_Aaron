@@ -3,13 +3,9 @@ package com.example.aaron.video_aaron;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -28,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SurfaceHolder mSurfaceHolder;
     private AudioManager mAudioManager;
 
-    ImageButton mPlay, mPause, mRewing, mForward, mMute, mUnmute, mFullscreen, mFullscreenExit;
+    ImageButton mPlay, mPause, mRewind, mForward, mMute, mUnmute, mFullscreen, mFullscreenExit;
     ConstraintLayout mPlayer;
     SeekBar mSeekBar;
     TextView mTimeCurrent,mTimeTotal;
@@ -141,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mFullscreen.setVisibility(View.VISIBLE);
                 break;
             }
-            case R.id.rewing:
+            case R.id.rewind:
             {
                 break;
             }
@@ -167,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initUi() {
         mPlay = findViewById(R.id.play);
         mPause = findViewById(R.id.pause);
-        mRewing = findViewById(R.id.rewing);
+        mRewind = findViewById(R.id.rewind);
         mForward = findViewById(R.id.forward);
         mMute = findViewById(R.id.mute);
         mUnmute = findViewById(R.id.unmute);
@@ -181,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mPlay.setOnClickListener(this);
         mPause.setOnClickListener(this);
-        mRewing.setOnClickListener(this);
+        mRewind.setOnClickListener(this);
         mForward.setOnClickListener(this);
         mMute.setOnClickListener(this);
         mUnmute.setOnClickListener(this);
