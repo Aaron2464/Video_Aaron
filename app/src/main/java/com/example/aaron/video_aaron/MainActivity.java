@@ -1,11 +1,15 @@
 package com.example.aaron.video_aaron;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SurfaceView mSurfaceView;
     private MediaPlayer mMediaPlayer;
     private SurfaceHolder mSurfaceHolder;
+    private AudioManager mAudioManager;
+
     ImageButton mPlay, mPause, mRewing, mForward, mMute, mUnmute, mFullscreen, mFullscreenExit;
     ConstraintLayout mPlayer;
     SeekBar mSeekBar;
@@ -109,12 +115,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.mute:
             {
+                mAudioManager= (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
                 mMute.setVisibility(View.INVISIBLE);
                 mUnmute.setVisibility(View.VISIBLE);
                 break;
             }
             case R.id.unmute:
             {
+                mAudioManager= (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
                 mUnmute.setVisibility(View.INVISIBLE);
                 mMute.setVisibility(View.VISIBLE);
                 break;
