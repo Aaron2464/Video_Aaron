@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initUi();
         mSurfaceHolder = mSurfaceView.getHolder();
-//        mSurfaceHolder.addCallback(MainActivity.this);      //Surface lifecycle need to be handle
+        mSurfaceHolder.addCallback(MainActivity.this);      //Surface lifecycle need to be handle
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -145,10 +145,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.rewind:
             {
+                mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() - 15000);
                 break;
             }
             case R.id.forward:
             {
+                mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() + 15000);
                 break;
             }
 
